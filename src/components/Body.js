@@ -1,9 +1,12 @@
 import { useState, useEffect } from "react";
 import RestaurantCard from "./RestaurantCard";
 import Shimmer from "./Shimmer";
+import { Link } from "react-router-dom";
 
 const Body = () => {
   const [resList, setResList] = useState([]);
+  const [filteredRestList, setFilteredRestList] = useState([]);
+  const [searchText, setSearchText] = useState("");
 
   useEffect(() => {
     fetchData();
@@ -19,9 +22,8 @@ const Body = () => {
       json?.data?.cards[5]?.card?.card?.gridElements?.infoWithStyle
         ?.restaurants;
     setResList(cards);
-
+    setFilteredRestList(cards);
     console.log(json);
-    console.log(cards);
   };
 
   if (resList?.length === 0) {
@@ -30,11 +32,39 @@ const Body = () => {
 
   return (
     <div className="body">
-      <div className="search">
+      <div className="filter">
+        <div className="search">
+          <input
+            type="text"
+            className="search-box"
+            value={searchText}
+            onChange={(e) => {
+              setSearchText(e.target.value);
+            }}
+          />
+          <button
+            onClick={() => {
+              //filter restaurant as per search text
+              const filteredRestaurant = resList.filter((res) => {
+                console.log(
+                  searchText,
+                  res.info.name,
+                  res.info.name.includes(searchText)
+                );
+                const resName = res.info.name.toUpperCase();
+                const text = searchText.toUpperCase();
+                return resName.includes(text);
+              });
+              setFilteredRestList(filteredRestaurant);
+            }}
+          >
+            Search
+          </button>
+        </div>
         <button
           className="filter-btn"
           onClick={() => {
-            setResList(
+            setFilteredRestList(
               resList?.filter((filteredRes) => filteredRes.info.avgRating > 4.3)
             );
           }}
@@ -43,8 +73,8 @@ const Body = () => {
         </button>
       </div>
       <div className="restro-container">
-        {resList?.map((res) => {
-          return <RestaurantCard resData={res.info} key={res.info.id} />;
+        {filteredRestList?.map((res) => {
+          return <Link to={`restaurants/${res.info.id}`} key={res.info.id}><RestaurantCard resData={res.info}  /></Link>;
         })}
       </div>
     </div>

@@ -40,8 +40,10 @@ width: 100px;
 
 }
 
-.search {
+.filter {
     padding: 10px;
+    display: flex;
+    justify-content: space-between;
 }
 
 .res-card > img {
@@ -72,4 +74,21 @@ width: 100px;
     height: 350px;
     margin: 45px;
     background-color: #f0f0f0;
+}
+
+.btn-login {
+    padding: 0 20px;
+    cursor: pointer;
+    height: 50%;
+    position: relative;
+    top: 25px;
+    
+}
+
+.btn-login:hover {
+    background-color: aquamarine;
+}
+
+.Restaurant-menu-menu-list > ul {
+    list-style: none;
 }
