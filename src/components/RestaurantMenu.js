@@ -1,26 +1,13 @@
 import { useEffect, useState } from "react";
 import Shimmer from "./Shimmer";
 import { useParams } from "react-router-dom";
-import { MENU_URL } from "../utils/constants";
+import MenuCard from "./MenuCard";
+import useRestaurantMenu from "../utils/useRestaurantMenu";
 
 const RestaurantMenu = () => {
-  const [restroInfo, setRestroInfo] = useState(null);
-  const {resId} = useParams()
+  const { resId } = useParams();
 
-  useEffect(() => {
-    fetchMenu();
-  }, []);
-
-  const fetchMenu = async () => {
-    const data = await fetch(
-        MENU_URL + resId
-    );
-    const json = await data.json();
-    console.log(json);
-
-    const restroDetails = json?.data;
-    setRestroInfo(restroDetails);
-  };
+  const restroInfo = useRestaurantMenu(resId) 
 
   if (restroInfo === null) return <Shimmer />;
 
@@ -35,7 +22,6 @@ const RestaurantMenu = () => {
         );
       }
     );
-  console.log("menuTypes", NestedmenuTypes);
 
   const MenuTypes =
     restroInfo?.cards?.[2]?.groupedCard?.cardGroupMap?.REGULAR?.cards?.filter(
@@ -47,9 +33,6 @@ const RestaurantMenu = () => {
       }
     );
 
-  console.log("menuTypes", MenuTypes);
-
-
   return (
     <div>
       <h1>{name}</h1>
@@ -59,16 +42,46 @@ const RestaurantMenu = () => {
       <div className="Restaurant-menu-menu-list">
         <ul>
           <li>
-            <h3> {MenuTypes[0].card?.card?.title}</h3>
-            <ul>
-                {MenuTypes?.[0]?.card?.card.itemCards?.map((item) => {
-                  return <li>{item?.card?.info?.name}</li>  
-                })}
-            </ul>
+            {MenuTypes?.map((data) => {
+              return (
+                <>
+                  <h3>{data.card?.card?.title}</h3>
+                  {data?.card?.card.itemCards?.map((item) => {
+                    return (
+                      <MenuCard
+                        name={item?.card?.info?.name}
+                        price={item?.card?.info?.price / 100}
+                        description={item?.card?.info?.description}
+                      />
+                    );
+                  })}
+                </>
+              );
+            })}
           </li>
           {NestedmenuTypes?.map((item) => {
-            const title = item?.card?.card.title;
-            return <li key={item?.card?.card?.type}>{title}</li>;
+            const title = item?.card?.card?.title;
+            return (
+              <li key={item?.card?.card?.type}>
+                <h3>{title}</h3>
+                {item?.card?.card?.categories?.map((data) => {
+                  return (
+                    <>
+                      <h4>{data?.title}</h4>
+                      {data.itemCards?.map((item) => {
+                        return (
+                          <MenuCard
+                            name={item?.card?.info?.name}
+                            price={item?.card?.info?.price / 100}
+                            description={item?.card?.info?.description}
+                          />
+                        );
+                      })}
+                    </>
+                  );
+                })}
+              </li>
+            );
           })}
         </ul>
       </div>

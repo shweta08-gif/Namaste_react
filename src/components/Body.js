@@ -19,7 +19,7 @@ const Body = () => {
 
     const json = await data.json();
     const cards =
-      json?.data?.cards[5]?.card?.card?.gridElements?.infoWithStyle
+      json?.data?.cards[4]?.card?.card?.gridElements?.infoWithStyle
         ?.restaurants;
     setResList(cards);
     setFilteredRestList(cards);

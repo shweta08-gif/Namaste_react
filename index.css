@@ -92,3 +92,22 @@ width: 100px;
 .Restaurant-menu-menu-list > ul {
     list-style: none;
 }
+
+.user-card {
+    padding: 10px;
+    border: 1px solid black;
+}
+
+.menu-card {
+    padding: 10px;
+    border-bottom: 2px solid grey;
+}
+
+.menu-description {
+    color: darkgray;
+}
+
+.user-card > img {
+    width: 8%;
+    height: 8%;
+}
